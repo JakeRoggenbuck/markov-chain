@@ -81,31 +81,32 @@ class MakeMarkov:
         cur.execute("SELECT * FROM words")
         pprint(cur.fetchall())
 
-    def generate(self, start, length):
-        """Generate some text using the chain"""
-        # Made for easy of use in the api
-        if start is None:
-            start = "A"
 
-        if length is None:
-            length = 100
+def generate(start, length):
+    """Generate some text using the chain"""
+    # Made for easy of use in the api
+    if start is None:
+        start = "A"
 
-        # Open the pre built chain
-        with open("markov.json", "r") as myfile:
-            data = myfile.read()
-            obj = json.loads(data)
+    if length is None:
+        length = 100
 
-        word = start
-        full = start + " "
+    # Open the pre built chain
+    with open("markov.json", "r") as myfile:
+        data = myfile.read()
+        obj = json.loads(data)
 
-        # For each number, get the next words, and use their weights to get the
-        # number that comes after, then set that to the new word
-        for _ in range(length):
-            values = list(obj[word].values())
-            word = choices(list(obj[word].keys()), weights=values)[0]
-            full += word + " "
+    word = start
+    full = start + " "
 
-        return full
+    # For each number, get the next words, and use their weights to get the
+    # number that comes after, then set that to the new word
+    for _ in range(length):
+        values = list(obj[word].values())
+        word = choices(list(obj[word].keys()), weights=values)[0]
+        full += word + " "
+
+    return full
 
 
 if __name__ == "__main__":
